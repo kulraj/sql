@@ -1,7 +1,53 @@
-create database testing;
-use testing;
-create table testing_table(name varchar(20), contact_name varchar(20), roll_no char(4));
-alter table testing_table drop name;
-alter table testing_table change contact_name username varchar(20);
-alter table testing_table add (first_name varchar(10), last_name varchar(10));
-alter table testing_table modify roll_no int;
+mysql> create database testing;
+mysql> use testing;
+
+mysql> create table testing_table(name varchar(20) not null, contact_name varchar(20), roll_no char(5) not null primary key);
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> desc testing_table;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| name         | varchar(20) | NO   |     | NULL    |       |
+| contact_name | varchar(20) | YES  |     | NULL    |       |
+| roll_no      | char(5)     | NO   | PRI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table testing_table drop name;
+Query OK, 0 rows affected (0.43 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table testing_table change contact_name username varchar(20);
+Query OK, 0 rows affected (0.36 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table testing_table add (first_name varchar(10), last_name varchar(10));
+Query OK, 0 rows affected (0.44 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc testing_table;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| username   | varchar(20) | YES  |     | NULL    |       |
+| roll_no    | char(5)     | NO   | PRI | NULL    |       |
+| first_name | varchar(10) | YES  |     | NULL    |       |
+| last_name  | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table testing_table modify roll_no int(5) zerofill unsigned;
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc testing_table;
++------------+--------------------------+------+-----+---------+-------+
+| Field      | Type                     | Null | Key | Default | Extra |
++------------+--------------------------+------+-----+---------+-------+
+| username   | varchar(20)              | YES  |     | NULL    |       |
+| roll_no    | int(5) unsigned zerofill | NO   | PRI | 00000   |       |
+| first_name | varchar(10)              | YES  |     | NULL    |       |
+| last_name  | varchar(10)              | YES  |     | NULL    |       |
++------------+--------------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
