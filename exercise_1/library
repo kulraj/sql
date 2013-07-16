@@ -1,0 +1,182 @@
+mysql> create database library;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use library;
+Database changed
+mysql>create table branch (Bcode varchar(3) not null primary key, librarian varchar(20) not null, address varchar (20) not null);
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> desc branch;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Bcode     | varchar(3)  | NO   | PRI | NULL    |       |
+| librarian | varchar(20) | NO   |     | NULL    |       |
+| address   | varchar(20) | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table titles (title varchar(25) not null primary key, author varchar(20) not null, publisher varchar(20) not null);
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> desc titles;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| title     | varchar(25) | NO   | PRI | NULL    |       |
+| author    | varchar(20) | NO   |     | NULL    |       |
+| publisher | varchar(20) | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql>  create table holdings(branch varchar(3), Title varchar(25), `#copies` tinyint unsigned not null default 1, primary key(branch, Title));
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> desc holdings;
++---------+---------------------+------+-----+---------+-------+
+| Field   | Type                | Null | Key | Default | Extra |
++---------+---------------------+------+-----+---------+-------+
+| branch  | varchar(3)          | NO   | PRI |         |       |
+| Title   | varchar(25)         | NO   | PRI |         |       |
+| #copies | tinyint(3) unsigned | NO   |     | 1       |       |
++---------+---------------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into branch values ("B1", "John Smith", "2 Anglesea rd"),
+    ->                           ("B2", "Mary Jones", "34 pearse st"),
+    ->                           ("B3", "Francis Owens", "Grange X");
+Query OK, 3 rows affected (0.11 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from branch;
++-------+---------------+---------------+
+| Bcode | librarian     | address       |
++-------+---------------+---------------+
+| B1    | John Smith    | 2 Anglesea rd |
+| B2    | Mary Jones    | 34 pearse st  |
+| B3    | Francis Owens | Grange X      |
++-------+---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into titles values ("Susannah", "ann brown", "macmillan"),
+    ->                           ("how to fish", "amy fly", "stop press"),
+    ->                           ("a history of dublin", "david little", "wiley"),
+    ->                           ("computers", "blaise pascal", "applewoods"),
+    ->                           ("the wife", "ann brown", "macmillan");
+Query OK, 5 rows affected (0.12 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from titles;
++---------------------+---------------+------------+
+| title               | author        | publisher  |
++---------------------+---------------+------------+
+| a history of dublin | david little  | wiley      |
+| computers           | blaise pascal | applewoods |
+| how to fish         | amy fly       | stop press |
+| Susannah            | ann brown     | macmillan  |
+| the wife            | ann brown     | macmillan  |
++---------------------+---------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into holdings values("B1", "susannah", 3);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into holdings values("B1", "how to fish", 2);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into holdings values("B1", "a history of dublin", 1);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into holdings values("B2", "how to fish", 4);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into holdings values("B2", "computers", 2);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into holdings values("B2", "the wife", 3);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into holdings values("B3", "a history of dublin", 1);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into holdings values("B3", "computers", 4);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into holdings values("B3", "susannah", 3);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into holdings values("B3", "the wife", 1);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from holdings;
++--------+---------------------+---------+
+| branch | Title               | #copies |
++--------+---------------------+---------+
+| B1     | a history of dublin |       1 |
+| B1     | how to fish         |       2 |
+| B1     | susannah            |       3 |
+| B2     | computers           |       2 |
+| B2     | how to fish         |       4 |
+| B2     | the wife            |       3 |
+| B3     | a history of dublin |       1 |
+| B3     | computers           |       4 |
+| B3     | susannah            |       3 |
+| B3     | the wife            |       1 |
++--------+---------------------+---------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+
+Q1) the names of all library books published by Macmillan
+
+mysql> select title as books_by_macmillan from titles where publisher = "macmillan";
++--------------------+
+| books_by_macmillan |
++--------------------+
+| Susannah           |
+| the wife           |
++--------------------+
+2 rows in set (0.11 sec)
+
+
+Q2) branches that hold any books by brown (using nested subquery)
+
+mysql>  select distinct branch from holdings where branch in (select branch from titles, holdings where titles.title = holdings.title and titles.author = "ann brown");
++--------+
+| branch |
++--------+
+| B1     |
+| B2     |
+| B3     |
++--------+
+3 rows in set (0.00 sec)
+
+
+
+Q3) branches that hold any books by brown (without using nested subquery)
+
+mysql> select distinct branch from titles, holdings where titles.title = holdings.title and titles.author = "ann brown";
++--------+
+| branch |
++--------+
+| B1     |
+| B3     |
+| B2     |
++--------+
+3 rows in set (0.03 sec)
+
+
+Q4) total number of books at each branch
+
+mysql> select sum(`#copies`),branch from holdings group by branch;
++----------------+--------+
+| sum(`#copies`) | branch |
++----------------+--------+
+|              6 | B1     |
+|              9 | B2     |
+|              9 | B3     |
++----------------+--------+
+3 rows in set (0.00 sec)

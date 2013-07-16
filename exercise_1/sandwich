@@ -1,0 +1,176 @@
+mysql> create database sandwich;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use sandwich;
+Database changed
+
+mysql> create table tastes (name varchar(20) not null, filling varchar(10) not null, primary key(name, filling));
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> desc tastes;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | NO   | PRI | NULL    |       |
+| filling | varchar(10) | NO   | PRI | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table locations (lname varchar(15) not null primary key, phone numeric(7) not null, address varchar(20)); 
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> desc locations;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| lname   | varchar(15)  | NO   | PRI | NULL    |       |
+| phone   | decimal(7,0) | NO   |     | NULL    |       |
+| address | varchar(20)  | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+3 rows in set (0.03 sec)
+
+mysql> create table sandwiches (location varchar(15) not null, bread varchar(10) not null, filling varchar(10) not null, price decimal(3,2) not null, primary key(location, bread, filling)); 
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> desc sandwiches;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| location | varchar(15)  | NO   | PRI | NULL    |       |
+| bread    | varchar(10)  | NO   | PRI | NULL    |       |
+| filling  | varchar(10)  | NO   | PRI | NULL    |       |
+| price    | decimal(3,2) | NO   |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+mysql> insert into tastes values ("brown", "turkey"),
+    ->                           ("brown", "beef"),
+    ->                           ("brown", "ham"),
+    ->                           ("jones", "cheese"),
+    ->                           ("green", "beef"),
+    ->                           ("green", "turkey"),
+    ->                           ("green", "cheese");
+Query OK, 7 rows affected (0.07 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from tastes;
++-------+---------+
+| name  | filling |
++-------+---------+
+| brown | beef    |
+| brown | ham     |
+| brown | turkey  |
+| green | beef    |
+| green | cheese  |
+| green | turkey  |
+| jones | cheese  |
++-------+---------+
+7 rows in set (0.00 sec)
+
+mysql> insert into locations values("lincoln", 6834523, "lincoln palace"),
+    ->                             ("o'niell's", 6742134, "pearse st"),
+    ->                             ("old nag", 7678132, "dame st"),
+    ->                             ("buttery", 7023421, "college st");
+Query OK, 4 rows affected (0.09 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from locations;
++-----------+---------+----------------+
+| lname     | phone   | address        |
++-----------+---------+----------------+
+| buttery   | 7023421 | college st     |
+| lincoln   | 6834523 | lincoln palace |
+| o'niell's | 6742134 | pearse st      |
+| old nag   | 7678132 | dame st        |
++-----------+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into sandwiches values ("lincoln", "rye", "ham", 1.25);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into sandwiches values ("o'niell's", "white", "cheese", 1.20);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into sandwiches values ("o'niell's", "whole", "ham", 1.25);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into sandwiches values ("old nag", "rye", "beef", 1.35);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into sandwiches values ("buttery", "white", "cheese", 1.00);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into sandwiches values ("o'niell's", "white", "turkey", 1.35);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into sandwiches values ("buttery", "white", "ham", 1.10);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into sandwiches values ("lincoln", "rye", "beef", 1.35);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into sandwiches values ("lincoln", "white", "ham", 1.30);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into sandwiches values ("old nag", "rye", "ham", 1.40);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from sandwiches;
++-----------+-------+---------+-------+
+| location  | bread | filling | price |
++-----------+-------+---------+-------+
+| buttery   | white | cheese  |  1.00 |
+| buttery   | white | ham     |  1.10 |
+| lincoln   | rye   | beef    |  1.35 |
+| lincoln   | rye   | ham     |  1.25 |
+| lincoln   | white | ham     |  1.30 |
+| o'niell's | white | cheese  |  1.20 |
+| o'niell's | white | turkey  |  1.35 |
+| o'niell's | whole | ham     |  1.25 |
+| old nag   | rye   | beef    |  1.35 |
+| old nag   | rye   | ham     |  1.40 |
++-----------+-------+---------+-------+
+10 rows in set (0.00 sec)
+
+
+
+
+Q1) places where Jones can eat (using nested subquery)
+
+mysql> select distinct location from sandwiches where location in (select location from sandwiches, tastes where tastes.filling = sandwiches.filling and tastes.name = "jones");
++-----------+
+| location  |
++-----------+
+| buttery   |
+| o'niell's |
++-----------+
+2 rows in set (0.03 sec)
+
+mysql> 
+
+Q2) places where Jones can eat (without using nested subquery)
+
+mysql> select distinct location from sandwiches, tastes where tastes.filling = sandwiches.filling and tastes.name = "jones";
++-----------+
+| location  |
++-----------+
+| buttery   |
+| o'niell's |
++-----------+
+2 rows in set (0.00 sec)
+
+Q3) for each location the number of people who can eat there
+
+mysql> select  count(distinct name) as "number of people", location from tastes, sandwiches where tastes.filling = sandwiches.filling group by location;
++------------------+-----------+
+| number of people | location  |
++------------------+-----------+
+|                3 | buttery   |
+|                2 | lincoln   |
+|                3 | o'niell's |
+|                2 | old nag   |
++------------------+-----------+
+4 rows in set (0.02 sec)
+
