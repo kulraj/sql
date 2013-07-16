@@ -37,17 +37,17 @@ mysql> desc testing_table;
 +------------+-------------+------+-----+---------+-------+
 4 rows in set (0.00 sec)
 
-mysql> alter table testing_table modify roll_no int(5) zerofill unsigned;
-Query OK, 0 rows affected (0.14 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+mysql> alter table testing_table modify roll_no smallint unsigned zerofill;
+Query OK, 2 rows affected (0.47 sec)
+Records: 2  Duplicates: 0  Warnings: 0
 
 mysql> desc testing_table;
-+------------+--------------------------+------+-----+---------+-------+
-| Field      | Type                     | Null | Key | Default | Extra |
-+------------+--------------------------+------+-----+---------+-------+
-| username   | varchar(20)              | YES  |     | NULL    |       |
-| roll_no    | int(5) unsigned zerofill | NO   | PRI | 00000   |       |
-| first_name | varchar(10)              | YES  |     | NULL    |       |
-| last_name  | varchar(10)              | YES  |     | NULL    |       |
-+------------+--------------------------+------+-----+---------+-------+
++------------+-------------------------------+------+-----+---------+-------+
+| Field      | Type                          | Null | Key | Default | Extra |
++------------+-------------------------------+------+-----+---------+-------+
+| username   | varchar(20)                   | YES  |     | NULL    |       |
+| roll_no    | smallint(5) unsigned zerofill | NO   | PRI | 00000   |       |
+| first_name | varchar(10)                   | YES  |     | NULL    |       |
+| last_name  | varchar(10)                   | YES  |     | NULL    |       |
++------------+-------------------------------+------+-----+---------+-------+
 4 rows in set (0.00 sec)
