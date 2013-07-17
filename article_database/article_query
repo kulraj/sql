@@ -1,0 +1,230 @@
+Q1) select all articles whose author is user3.
+
+mysql> select articles.title from articles, users where articles.user_id = users.id and users.name = "user3";
++----------+
+| title    |
++----------+
+| article6 |
++----------+
+1 row in set (0.02 sec)
+
+
+Q2) For all the articles being selected above, select all the articles and also the comments associated with those articles in a single query
+
+mysql> select articles.title as article_by_user3,comments.text as comment from articles, users, comments where articles.user_id = users.id and comments.article_title = articles.title and users.name = "user3";
++------------------+-------------------+
+| article_by_user3 | comment           |
++------------------+-------------------+
+| article6         | this is good      |
+| article6         | this is very good |
++------------------+-------------------+
+2 rows in set (0.00 sec)
+
+
+Q3) Write a query to select all articles which do not have any comments
+
+mysql> select articles.title as "articles without comments" from articles left join comments on articles.title = comments.article_title where comments.id is null;
++---------------------------+
+| articles without comments |
++---------------------------+
+| article5                  |
+| article7                  |
+| article8                  |
++---------------------------+
+3 rows in set (0.00 sec)
+
+
+Q4) Write a query to select article which has maximum comments
+
+mysql> select articles.title as "article with maximum comments" from articles, comments where articles.title = comments.article_title group by articles.title order by count(*) desc limit 1;
++-------------------------------+
+| article with maximum comments |
++-------------------------------+
+| article1                      |
++-------------------------------+
+1 row in set (0.00 sec)
+
+
+Q5) Write a query to select article which does not have more than one comment by the same user ( do this using left join and also do it using group by )
+
+1) using group by
+
+mysql> create temporary table user_comments (select article_title as title from users, comments where users.id = comments.user_id group by concat(comments.article_title,comments.user_id) having count(*) > 1);
+Query OK, 2 rows affected (0.10 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from user_comments;
++----------+
+| title    |
++----------+
+| article1 |
+| article2 |
++----------+
+2 rows in set (0.00 sec)
+
+
+mysql> select title from articles where title not in (select * from user_comments);
++----------+
+| title    |
++----------+
+| article4 |
+| article5 |
+| article6 |
+| article7 |
+| article8 |
++----------+
+5 rows in set (0.00 sec)
+
+
+2) using left join
+
+mysql> create temporary table article_comments (select title, comments.user_id from articles left join comments on articles.title = comments.article_title);
+Query OK, 12 rows affected (0.14 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> select * from article_comments;
++----------+---------+
+| title    | user_id |
++----------+---------+
+| article1 |   00008 |
+| article1 |   00006 |
+| article1 |   00010 |
+| article1 |   00008 |
+| article2 |   00010 |
+| article2 |   00010 |
+| article4 |   00008 |
+| article5 |    NULL |
+| article6 |   00007 |
+| article6 |   00010 |
+| article7 |    NULL |
+| article8 |    NULL |
++----------+---------+
+12 rows in set (0.00 sec)
+
+
+
+
+mysql> create table user_comments (select name, article_title from users left join comments on users.id = comments.user_id);
+Query OK, 14 rows affected (0.14 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> select * from user_comments;
++-------+---------------+
+| name  | article_title |
++-------+---------------+
+| user1 | article1      |
+| user2 | article6      |
+| user3 | article1      |
+| user3 | article4      |
+| user3 | article1      |
+| user4 | NULL          |
+| user5 | article2      |
+| user5 | article2      |
+| user5 | article1      |
+| user5 | article6      |
+| john  | article3      |
+| jones | NULL          |
+| bruce | NULL          |
+| clark | NULL          |
++-------+---------------+
+14 rows in set (0.00 sec)
+
+mysql> create table user_article_comments (select title, user_comments.name from articles left join user_comments on articles.title = user_comments.article_title);
+Query OK, 12 rows affected (0.10 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> select * from user_article_comments;
++----------+-------+
+| title    | name  |
++----------+-------+
+| article1 | user1 |
+| article1 | user3 |
+| article1 | user3 |
+| article1 | user5 |
+| article2 | user5 |
+| article2 | user5 |
+| article4 | user3 |
+| article5 | NULL  |
+| article6 | user2 |
+| article6 | user5 |
+| article7 | NULL  |
+| article8 | NULL  |
++----------+-------+
+12 rows in set (0.00 sec)
+
+mysql> create table title_count (select distinct title, (select count(*) from user_article_comments as articles2 where articles1.title = articles2.title and articles1.name = articles2.name) as count from user_article_comments as articles1);
+Query OK, 8 rows affected (0.21 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select * from title_count;
++----------+-------+
+| title    | count |
++----------+-------+
+| article1 |     1 |
+| article1 |     2 |
+| article2 |     2 |
+| article4 |     1 |
+| article5 |     0 |
+| article6 |     1 |
+| article7 |     0 |
+| article8 |     0 |
++----------+-------+
+8 rows in set (0.00 sec)
+
+mysql> create temporary table titles_max_count (select distinct title, (select max(`count`) from title_count as count1 where count1.title = count2.title) as max_count from title_count as count2);
+Query OK, 7 rows affected (0.12 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from titles_max_count;
++----------+-----------+
+| title    | max_count |
++----------+-----------+
+| article1 |         2 |
+| article2 |         2 |
+| article4 |         1 |
+| article5 |         0 |
+| article6 |         1 |
+| article7 |         0 |
+| article8 |         0 |
++----------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select title from titles_max_count where max_count < 2;
++----------+
+| title    |
++----------+
+| article4 |
+| article5 |
+| article6 |
+| article7 |
+| article8 |
++----------+
+5 rows in set (0.00 sec)
+
+_______________________________________________________________________________________________________________
+
+in stead of the last two steps we can also write:
+
+mysql> select distinct title from title_count as count2 where (select max(`count`) from title_count as count1 where count1.title = count2.title) < 2;
++----------+
+| title    |
++----------+
+| article4 |
+| article5 |
+| article6 |
+| article7 |
+| article8 |
++----------+
+5 rows in set (0.00 sec)
+
+_________________________________________________________________________________________________________________
+
+
+mysql> drop table title_count;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> drop table user_article_comments;
+Query OK, 0 rows affected (0.10 sec)
+
+dropped the temporary tables.
+

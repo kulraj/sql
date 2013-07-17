@@ -1,0 +1,47 @@
+mysql> insert into articles values ("article1", 1, 6, "lorem ipsum"),
+    ->                             ("article2", 2, 7, "lorem ipsum"),
+    ->                             ("article3", 3, 8, "lorem"),
+    ->                             ("article4", 2, 6, "lorem ipsum dol"),
+    ->                             ("article5", 4, 10, "lorem dol"),
+    ->                             ("article6", 1, 8, "lorem ips");
+Query OK, 6 rows affected (0.07 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from articles;
++----------+-------------+---------+-----------------+
+| title    | category_id | user_id | text            |
++----------+-------------+---------+-----------------+
+| article1 |           1 |   00006 | lorem ipsum     |
+| article2 |           2 |   00007 | lorem ipsum     |
+| article3 |           3 |   00008 | lorem           |
+| article4 |           2 |   00006 | lorem ipsum dol |
+| article5 |           4 |   00010 | lorem dol       |
+| article6 |           1 |   00008 | lorem ips       |
++----------+-------------+---------+-----------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into articles values ("article7", 5, 11, "nice"), ("article8", 6, 9, "what");
+Query OK, 2 rows affected (0.07 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> update articles set text = "new text" where user_id = 7;
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> delete from articles where category_id = 3;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from articles;
++----------+-------------+---------+-----------------+
+| title    | category_id | user_id | text            |
++----------+-------------+---------+-----------------+
+| article1 |           1 |   00006 | lorem ipsum     |
+| article2 |           2 |   00007 | new text        |
+| article4 |           2 |   00006 | lorem ipsum dol |
+| article5 |           4 |   00010 | lorem dol       |
+| article6 |           1 |   00008 | lorem ips       |
+| article7 |           5 |   00011 | nice            |
+| article8 |           6 |   00009 | what            |
++----------+-------------+---------+-----------------+
+7 rows in set (0.00 sec)
+

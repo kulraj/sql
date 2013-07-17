@@ -1,0 +1,52 @@
+mysql> insert into users (name) values ("user1"),
+    ->                                 ("user2"),
+    ->                                 ("user3");
+Query OK, 3 rows affected (0.06 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into users (name,type) values ("user4",1),
+    ->                                      ("user5",1),
+    ->                                      ("user6",2);
+Query OK, 3 rows affected (0.08 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from users;
++-------+-------+--------+
+| name  | id    | type   |
++-------+-------+--------+
+| user1 | 00006 | normal |
+| user2 | 00007 | normal |
+| user3 | 00008 | normal |
+| user4 | 00009 | admin  |
+| user5 | 00010 | admin  |
+| user6 | 00011 | normal |
++-------+-------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update users set name = "john" where id = 11;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> insert into users (name) values ("jones"), ("wally"), ("bruce"), ("clark");
+Query OK, 4 rows affected (0.06 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> delete from users where id = 13;
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from users;
++-------+-------+--------+
+| name  | id    | type   |
++-------+-------+--------+
+| user1 | 00006 | normal |
+| user2 | 00007 | normal |
+| user3 | 00008 | normal |
+| user4 | 00009 | admin  |
+| user5 | 00010 | admin  |
+| john  | 00011 | normal |
+| jones | 00012 | normal |
+| bruce | 00014 | normal |
+| clark | 00015 | normal |
++-------+-------+--------+
+9 rows in set (0.00 sec)
+

@@ -1,0 +1,49 @@
+mysql> create database article;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use article;
+Database changed
+
+mysql> create table articles (title varchar(50) not null primary key, category_id tinyint unsigned not null, user_id smallint zerofill unsigned not null, `text` text);
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> desc articles;
++-------------+-------------------------------+------+-----+---------+-------+
+| Field       | Type                          | Null | Key | Default | Extra |
++-------------+-------------------------------+------+-----+---------+-------+
+| title       | varchar(50)                   | NO   | PRI | NULL    |       |
+| category_id | tinyint(3) unsigned           | NO   |     | NULL    |       |
+| user_id     | smallint(5) unsigned zerofill | NO   |     | NULL    |       |
+| text        | text                          | YES  |     | NULL    |       |
++-------------+-------------------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+mysql> create table comments (article_title varchar(30) not null, user_id smallint zerofill unsigned not null, id int zerofill unsigned auto_increment, `text` varchar(100), primary key(id));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> desc comments;
++---------------+-------------------------------+------+-----+---------+----------------+
+| Field         | Type                          | Null | Key | Default | Extra          |
++---------------+-------------------------------+------+-----+---------+----------------+
+| article_title | varchar(30)                   | NO   |     | NULL    |                |
+| user_id       | smallint(5) unsigned zerofill | NO   |     | NULL    |                |
+| id            | int(10) unsigned zerofill     | NO   | PRI | NULL    | auto_increment |
+| text          | varchar(100)                  | YES  |     | NULL    |                |
++---------------+-------------------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+
+
+mysql> create table categories (id tinyint auto_increment primary key, name varchar(20) not null, check (name <> ""));
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> desc categories;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | tinyint(4)  | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(20) | NO   |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.02 sec)

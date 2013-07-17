@@ -1,0 +1,70 @@
+mysql> insert into categories (name) values ("arts"), ("vehicles"), ("computers"), ("education"), ("family"), ("finance"), ("food"), ("health"), ("hobbies"), ("home"), ("holidays"), ("pets"), ("philosophy");
+Query OK, 13 rows affected (0.09 sec)
+Records: 13  Duplicates: 0  Warnings: 0
+
+mysql> select * from categories;
++----+------------+
+| id | name       |
++----+------------+
+|  1 | arts       |
+|  2 | vehicles   |
+|  3 | computers  |
+|  4 | education  |
+|  5 | family     |
+|  6 | finance    |
+|  7 | food       |
+|  8 | health     |
+|  9 | hobbies    |
+| 10 | home       |
+| 11 | holidays   |
+| 12 | pets       |
+| 13 | philosophy |
++----+------------+
+13 rows in set (0.00 sec)
+
+
+mysql> update categories set name = "hobbies and fun" where name = "hobbies";
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from categories;
++----+-----------------+
+| id | name            |
++----+-----------------+
+|  1 | arts            |
+|  2 | vehicles        |
+|  3 | computers       |
+|  4 | education       |
+|  5 | family          |
+|  6 | finance         |
+|  7 | food            |
+|  8 | health          |
+|  9 | hobbies and fun |
+| 10 | home            |
+| 11 | holidays        |
+| 12 | pets            |
+| 13 | philosophy      |
++----+-----------------+
+13 rows in set (0.00 sec)
+
+mysql> delete from categories where name = "philosophy";
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from categories;
++----+-----------------+
+| id | name            |
++----+-----------------+
+|  1 | arts            |
+|  2 | vehicles        |
+|  3 | computers       |
+|  4 | education       |
+|  5 | family          |
+|  6 | finance         |
+|  7 | food            |
+|  8 | health          |
+|  9 | hobbies and fun |
+| 10 | home            |
+| 11 | holidays        |
+| 12 | pets            |
++----+-----------------+
+12 rows in set (0.00 sec)
