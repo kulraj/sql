@@ -3,6 +3,11 @@ back up:
 mysqldump -u root -h localhost -p library > sql/back_up/library_copy.sql
 Enter password:
 
-mysql -u root -h localhost -p library < sql/back_up/library_copy.sql
+restore:
+
+mysql> create database restored;
+Query OK, 1 row affected (0.00 sec)
+
+mysql -u root -h localhost -p restored < sql/back_up/library_copy.sql
 Enter password:
 
