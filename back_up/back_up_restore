@@ -1,0 +1,8 @@
+back up:
+
+mysqldump -u root -h localhost -p library > sql/back_up/library_copy.sql
+Enter password:
+
+mysql -u root -h localhost -p library < sql/back_up/library_copy.sql
+Enter password:
+
