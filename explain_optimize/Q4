@@ -1,0 +1,52 @@
+Q4) 
+
+4.1 EXPLAIN a SELECT query against one of your databases which employs an INNER JOIN between two tables. What does the output look like? What does the values under different columns mean? Do you get only one row in EXPLAIN's output?
+
+ans) The output is as shown:
+
+
+mysql> explain select * from users inner join articles on users.id = articles.user_id;
++----+-------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+| id | select_type | table    | type   | possible_keys | key     | key_len | ref                      | rows | Extra |
++----+-------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+|  1 | SIMPLE      | articles | ALL    | NULL          | NULL    | NULL    | NULL                     |    7 |       |
+|  1 | SIMPLE      | users    | eq_ref | PRIMARY       | PRIMARY | 2       | article.articles.user_id |    1 |       |
++----+-------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+2 rows in set (0.00 sec)
+
+meaning of the values:
+
+1) id: the number of select. 
+2) select_type: simple means we are not using union or subqueries.
+3) table: the table to which the row refers
+4) type: All means full table scan, and eq_ref means One row is read from this table for each combination of rows from the previous tables.
+5) possible_keys: which indexes mySQL can use to find the rows.null means no key, and primary means primary key.
+6) key_len: length of the key . users has primary key id which has length 2.
+7) ref: the column used for comparison with index. we use user_id column of articles table in article database.
+8) rows: the number of rows examined in given table.
+
+
+4.2 Form the same select query in above question using a subquery instead of a JOIN. What does the EXPLAIN output look like now? Which query is better and why?
+
+mysql> explain select *, (select name from users where users.id = articles.user_id) from articles;
++----+--------------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+| id | select_type        | table    | type   | possible_keys | key     | key_len | ref                      | rows | Extra |
++----+--------------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+|  1 | PRIMARY            | articles | ALL    | NULL          | NULL    | NULL    | NULL                     |    7 |       |
+|  2 | DEPENDENT SUBQUERY | users    | eq_ref | PRIMARY       | PRIMARY | 2       | article.articles.user_id |    1 |       |
++----+--------------------+----------+--------+---------------+---------+---------+--------------------------+------+-------+
+2 rows in set (0.01 sec)
+
+But this is a correlated subquery. Doing this with a non-correlated subquery:
+
+mysql> explain select * from users where id in (select id from users, articles where users.id = articles.user_id);
++----+--------------------+----------+--------+---------------+------------+---------+------+------+--------------------------+
+| id | select_type        | table    | type   | possible_keys | key        | key_len | ref  | rows | Extra                    |
++----+--------------------+----------+--------+---------------+------------+---------+------+------+--------------------------+
+|  1 | PRIMARY            | users    | ALL    | NULL          | NULL       | NULL    | NULL |    9 | Using where              |
+|  2 | DEPENDENT SUBQUERY | articles | ref    | index_user    | index_user | 2       | func |    1 | Using index              |
+|  2 | DEPENDENT SUBQUERY | users    | eq_ref | PRIMARY       | PRIMARY    | 2       | func |    1 | Using where; Using index |
++----+--------------------+----------+--------+---------------+------------+---------+------+------+--------------------------+
+3 rows in set (0.00 sec)
+
+the non- correlated subquery would be slower since it is scanning more number of rows. Here we are running the subquery once for every row whereas the join happens on indexes.
