@@ -1,0 +1,96 @@
+1) Find image that has been tagged most no of times.
+
+mysql> select count(*) as count, image_id from tags group by image_id order by count desc limit 1;
++-------+------------+
+| count | image_id   |
++-------+------------+
+|     3 | 0000000001 |
++-------+------------+
+1 row in set (0.00 sec)
+
+
+2) Find all images belonging to the friends of a particular user.
+
+mysql> select id as image_id from images join friends on friend = image_user where user_id = 4; 
++------------+
+| image_id   |
++------------+
+| 0000000001 |
+| 0000000002 |
+| 0000000003 |
+| 0000000004 |
+| 0000000005 |
+| 0000000009 |
+| 0000000010 |
++------------+
+7 rows in set (0.00 sec)
+
+
+
+3) Find all friends of a particular user (Say, userA) who has tagged him in all of his pics.
+
+
+mysql> create temporary table images_of_user_by (select count(*) as count,users.id,name,images.id as image_id  from users, images, tags where users.id = image_user and image_id = images.id and tagged = 4 group by users.id);
+Query OK, 3 rows affected (0.12 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from images_of_user_by;
++-------+------------+--------+------------+
+| count | id         | name   | image_id   |
++-------+------------+--------+------------+
+|     2 | 0000000001 | pramod | 0000000001 |
+|     1 | 0000000004 | sahil  | 0000000006 |
+|     2 | 0000000005 | divya  | 0000000009 |
++-------+------------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> create temporary table images_of_allusers_by (select count(*) as count, id, image_user from images group by image_user);
+Query OK, 20 rows affected (0.09 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> select * from images_of_allusers_by;
++-------+------------+------------+
+| count | id         | image_user |
++-------+------------+------------+
+|     2 | 0000000001 | 0000000001 |
+|     1 | 0000000003 | 0000000002 |
+|     2 | 0000000004 | 0000000003 |
+|     3 | 0000000006 | 0000000004 |
+|     2 | 0000000009 | 0000000005 |
+|     1 | 0000000011 | 0000000006 |
+|     1 | 0000000012 | 0000000007 |
+|     3 | 0000000013 | 0000000008 |
+|     3 | 0000000016 | 0000000010 |
+|     1 | 0000000019 | 0000000011 |
+|     1 | 0000000021 | 0000000012 |
+|     2 | 0000000020 | 0000000013 |
+|     3 | 0000000023 | 0000000014 |
+|     3 | 0000000026 | 0000000015 |
+|     4 | 0000000029 | 0000000016 |
+|     3 | 0000000033 | 0000000017 |
+|     3 | 0000000036 | 0000000018 |
+|     4 | 0000000039 | 0000000019 |
+|     5 | 0000000043 | 0000000020 |
+|     3 | 0000000048 | 0000000021 |
++-------+------------+------------+
+20 rows in set (0.00 sec)
+
+mysql> select name as "users who tagged sahil in all images" from images_of_user_by, images_of_allusers_by where images_of_user_by.count = images_of_allusers_by.count and images_of_user_by.id = images_of_allusers_by.image_user;
++--------------------------------------+
+| users who tagged sahil in all images |
++--------------------------------------+
+| pramod                               |
+| divya                                |
++--------------------------------------+
+2 rows in set (0.00 sec)
+
+
+4) Find friend of a particular user (Say, userA) who have tagged him most no. of times.
+
+mysql> select count(*) as count, users.id as user_id, name as "friend who tagged sahil most number of times" from users, images, tags where users.id = image_user and image_id = images.id and tagged = 4 group by users.id order by count desc limit 1;
++-------+------------+----------------------------------------------+
+| count | user_id    | friend who tagged sahil most number of times |
++-------+------------+----------------------------------------------+
+|     2 | 0000000001 | pramod                                       |
++-------+------------+----------------------------------------------+
+1 row in set (0.00 sec)

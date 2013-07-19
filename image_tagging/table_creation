@@ -1,0 +1,57 @@
+mysql> create database image_tagging;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> use image_tagging;
+Database changed
+
+mysql> create table users (id int zerofill auto_increment primary key, name varchar(30));
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> desc users;
++-------+---------------------------+------+-----+---------+----------------+
+| Field | Type                      | Null | Key | Default | Extra          |
++-------+---------------------------+------+-----+---------+----------------+
+| id    | int(10) unsigned zerofill | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(30)               | YES  |     | NULL    |                |
++-------+---------------------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+
+mysql> create table friends(user_id int unsigned zerofill references users.id, friend int unsigned zerofill references users.id, primary key(user_id, friend));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> desc friends;
++---------+---------------------------+------+-----+------------+-------+
+| Field   | Type                      | Null | Key | Default    | Extra |
++---------+---------------------------+------+-----+------------+-------+
+| user_id | int(10) unsigned zerofill | NO   | PRI | 0000000000 |       |
+| friend  | int(10) unsigned zerofill | NO   | PRI | 0000000000 |       |
++---------+---------------------------+------+-----+------------+-------+
+2 rows in set (0.00 sec)
+
+
+mysql> create table images(id int zerofill auto_increment primary key, image_user int unsigned zerofill references users.id);
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> desc images;
++------------+---------------------------+------+-----+---------+----------------+
+| Field      | Type                      | Null | Key | Default | Extra          |
++------------+---------------------------+------+-----+---------+----------------+
+| id         | int(10) unsigned zerofill | NO   | PRI | NULL    | auto_increment |
+| image_user | int(10) unsigned zerofill | YES  |     | NULL    |                |
++------------+---------------------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+
+mysql> create table tags(image_id int unsigned zerofill references images.id, tagged int unsigned zerofill references users.id);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> desc tags;
++----------+---------------------------+------+-----+---------+-------+
+| Field    | Type                      | Null | Key | Default | Extra |
++----------+---------------------------+------+-----+---------+-------+
+| image_id | int(10) unsigned zerofill | YES  |     | NULL    |       |
+| tagged   | int(10) unsigned zerofill | YES  |     | NULL    |       |
++----------+---------------------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
