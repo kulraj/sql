@@ -1,0 +1,69 @@
+Q1)What all cities did people respond from
+
+mysql> select distinct(city) from email_subscribers;
++-----------+
+| city      |
++-----------+
+|  Lucknow  |
+|  Chennai  |
+|  Kolkatta |
+|  Delhi    |
+|  Mumbai   |
++-----------+
+5 rows in set (0.36 sec)
+
+
+Q2) How many people responded from each city
+
+mysql> select count(*) as "number of people", city as "from" from email_subscribers group by city;
++------------------+-----------+
+| number of people | from      |
++------------------+-----------+
+|               42 |  Chennai  |
+|               40 |  Delhi    |
+|               38 |  Kolkatta |
+|               39 |  Lucknow  |
+|               41 |  Mumbai   |
++------------------+-----------+
+5 rows in set (0.00 sec)
+
+
+Q3) Which city were the maximum respondents from?
+
+mysql> select count(*) as count, city as "maximum respondents from" from email_subscribers group by city order by count desc limit 1;
++-------+--------------------------+
+| count | maximum respondents from |
++-------+--------------------------+
+|    42 |  Chennai                 |
++-------+--------------------------+
+1 row in set (0.00 sec)
+
+
+Q4) What all email domains did people respond from ?
+
+mysql> select distinct mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers;
++---------+
+| domain  |
++---------+
+| hotmail |
+| yahoo   |
+| me      |
+| gmail   |
++---------+
+4 rows in set (0.05 sec)
+
+
+Q5) Which is the most popular email domain among the respondents ?
+
+mysql> create temporary table domains select mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers;
+Query OK, 200 rows affected (0.18 sec)
+Records: 200  Duplicates: 0  Warnings: 0
+
+mysql> select count(*) as count, domain as "most popular domain" from domains group by domain order by count desc limit 1;
++-------+---------------------+
+| count | most popular domain |
++-------+---------------------+
+|    51 | yahoo               |
++-------+---------------------+
+1 row in set (0.01 sec)
+

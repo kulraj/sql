@@ -1,0 +1,233 @@
+mysql> create database website;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use website;
+Database changed
+
+mysql> create table email_subscribers (id int zerofill auto_increment primary key, email varchar(25), phone numeric(9), city varchar(15));
+Query OK, 0 rows affected (0.28 sec)
+
+mysql> desc email_subscribers;
++-------+---------------------------+------+-----+---------+----------------+
+| Field | Type                      | Null | Key | Default | Extra          |
++-------+---------------------------+------+-----+---------+----------------+
+| id    | int(10) unsigned zerofill | NO   | PRI | NULL    | auto_increment |
+| email | varchar(25)               | YES  |     | NULL    |                |
+| phone | decimal(9,0)              | YES  |     | NULL    |                |
+| city  | varchar(15)               | YES  |     | NULL    |                |
++-------+---------------------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+populate table:
+
+kulraj@kulraj-Inspiron-1525:~/sql$ mysqlimport --local --lines-terminated-by="\n" --fields-terminated-by="," website website_campaign/email_subscribers.txt --columns="email,phone,city" -u root -p
+Enter password: 
+website.email_subscribers: Records: 200  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql> select * from email_subscribers;
++------------+----------------------+---------+-----------+
+| id         | email                | phone   | city      |
++------------+----------------------+---------+-----------+
+| 0000000001 | 53e1228@hotmail.com  |  982958 |  Lucknow  |
+| 0000000002 | 4e68a8c@hotmail.com  | 9810776 |  Chennai  |
+| 0000000003 | 7650b89@yahoo.com    | 9832386 |  Kolkatta |
+| 0000000004 | f9b1317@yahoo.com    | 9815433 |  Delhi    |
+| 0000000005 | fd6515f@me.com       | 9820667 |  Delhi    |
+| 0000000006 | b389f91@gmail.com    |  983429 |  Kolkatta |
+| 0000000007 | 7b60d9f@me.com       |  983392 |  Mumbai   |
+| 0000000008 | f415e11@yahoo.com    | 9816538 |  Lucknow  |
+| 0000000009 | cfd4611@hotmail.com  | 9819398 |  Kolkatta |
+| 0000000010 | 53ac4bc@yahoo.com    |  989347 |  Kolkatta |
+| 0000000011 | 61f8cf9@me.com       |  986701 |  Kolkatta |
+| 0000000012 | c311d98@gmail.com    | 9813477 |  Chennai  |
+| 0000000013 | 18e7b58@hotmail.com  |  985633 |  Mumbai   |
+| 0000000014 | 53a8322@hotmail.com  | 9819188 |  Delhi    |
+| 0000000015 | a5b1ab3@me.com       | 9813820 |  Chennai  |
+| 0000000016 | 49b623d@hotmail.com  |   98334 |  Kolkatta |
+| 0000000017 | 0ad8472@me.com       | 9817281 |  Delhi    |
+| 0000000018 | b80f399@yahoo.com    | 9817148 |  Chennai  |
+| 0000000019 | 50c510a@me.com       |  981057 |  Chennai  |
+| 0000000020 | c3e1489@yahoo.com    |  983638 |  Kolkatta |
+| 0000000021 | 80806d0@hotmail.com  |  984888 |  Chennai  |
+| 0000000022 | b570c4f@gmail.com    | 9826014 |  Mumbai   |
+| 0000000023 | d5f5f1b@yahoo.com    | 9827342 |  Chennai  |
+| 0000000024 | 31d1aa8@yahoo.com    | 9829122 |  Chennai  |
+| 0000000025 | 91ef43b@me.com       |  987768 |  Chennai  |
+| 0000000026 | 454be51@me.com       | 9821149 |  Mumbai   |
+| 0000000027 | 6d45dc4@hotmail.com  | 9817143 |  Kolkatta |
+| 0000000028 | b7d9d0d@gmail.com    |  988468 |  Lucknow  |
+| 0000000029 | f29d15b@hotmail.com  |  982454 |  Mumbai   |
+| 0000000030 | 9444b0a@hotmail.com  |  988315 |  Chennai  |
+| 0000000031 | 93f8188@hotmail.com  |  982126 |  Delhi    |
+| 0000000032 | 842624b@yahoo.com    |  988207 |  Kolkatta |
+| 0000000033 | 614d167@yahoo.com    | 9813283 |  Chennai  |
+| 0000000034 | 42797f2@hotmail.com  |  983195 |  Chennai  |
+| 0000000035 | 6cf38a4@me.com       |  982374 |  Delhi    |
+| 0000000036 | 6f0c016@gmail.com    | 9812630 |  Lucknow  |
+| 0000000037 | e4dd79d@hotmail.com  | 9826387 |  Lucknow  |
+| 0000000038 | 7d0898a@me.com       | 9810914 |  Kolkatta |
+| 0000000039 | 5aa54fb@hotmail.com  |  985907 |  Chennai  |
+| 0000000040 | 1ecee11@hotmail.com  |  981613 |  Chennai  |
+| 0000000041 | 0467a86@hotmail.com  |  981977 |  Chennai  |
+| 0000000042 | c0af6df@me.com       |  985553 |  Delhi    |
+| 0000000043 | e3ec1dc@hotmail.com  | 9813735 |  Mumbai   |
+| 0000000044 | 19fe475@yahoo.com    | 9828437 |  Delhi    |
+| 0000000045 | 424d6ba@me.com       | 9817704 |  Kolkatta |
+| 0000000046 | 1b0f127@me.com       |  987980 |  Chennai  |
+| 0000000047 | 18be937@me.com       | 9819382 |  Lucknow  |
+| 0000000048 | e0900ac@yahoo.com    |  982707 |  Kolkatta |
+| 0000000049 | 0263273@gmail.com    | 9818804 |  Lucknow  |
+| 0000000050 | 87beea8@gmail.com    | 9832597 |  Lucknow  |
+| 0000000051 | fe6368b@gmail.com    | 9821170 |  Mumbai   |
+| 0000000052 | 74ebfd9@me.com       | 9830313 |  Delhi    |
+| 0000000053 | dee436e@gmail.com    | 9826989 |  Mumbai   |
+| 0000000054 | 6e58558@me.com       |  981329 |  Mumbai   |
+| 0000000055 | d629b41@me.com       |  981742 |  Lucknow  |
+| 0000000056 | ab25b4d@hotmail.com  | 9832506 |  Lucknow  |
+| 0000000057 | 10fae70@me.com       | 9821673 |  Chennai  |
+| 0000000058 | 70f7f38@yahoo.com    | 9818048 |  Kolkatta |
+| 0000000059 | 8d8761e@gmail.com    |  985886 |  Lucknow  |
+| 0000000060 | 25a84c1@me.com       | 9820330 |  Kolkatta |
+| 0000000061 | de975af@hotmail.com  | 9817786 |  Delhi    |
+| 0000000062 | 4180926@hotmail.com  | 9820424 |  Mumbai   |
+| 0000000063 | 64cebcc@hotmail.com  | 9821749 |  Kolkatta |
+| 0000000064 | 7d0898a@gmail.com    |  988602 |  Chennai  |
+| 0000000065 | 1092ab1@hotmail.com  | 9812531 |  Lucknow  |
+| 0000000066 | a68c673@yahoo.com    | 9821578 |  Lucknow  |
+| 0000000067 | 7face0c@me.com       | 9825893 |  Mumbai   |
+| 0000000068 | f9ac66a@yahoo.com    | 9828207 |  Mumbai   |
+| 0000000069 | e5ccd60@gmail.com    | 9830439 |  Kolkatta |
+| 0000000070 | ee38dd9@gmail.com    | 9824074 |  Mumbai   |
+| 0000000071 | 8515168@me.com       | 9828353 |  Mumbai   |
+| 0000000072 | 83fba63@me.com       |  987306 |  Delhi    |
+| 0000000073 | 3f20fe7@yahoo.com    |  984584 |  Lucknow  |
+| 0000000074 | b7a7b74@gmail.com    | 9832202 |  Mumbai   |
+| 0000000075 | 21b2cc5@gmail.com    | 9819389 |  Delhi    |
+| 0000000076 | 091b847@gmail.com    | 9813008 |  Lucknow  |
+| 0000000077 | 609d317@me.com       | 9818251 |  Delhi    |
+| 0000000078 | ff1a552@me.com       | 9831503 |  Delhi    |
+| 0000000079 | f156e42@hotmail.com  | 9814539 |  Kolkatta |
+| 0000000080 | 1d8c00a@gmail.com    |  981508 |  Kolkatta |
+| 0000000081 | 2ae0548@yahoo.com    | 9822305 |  Lucknow  |
+| 0000000082 | 9f5601b@me.com       |  981050 |  Delhi    |
+| 0000000083 | 4ca6549@gmail.com    |  981374 |  Mumbai   |
+| 0000000084 | 43da815@gmail.com    | 9826983 |  Chennai  |
+| 0000000085 | fec38e7@hotmail.com  | 9811326 |  Chennai  |
+| 0000000086 | fa4adf3@gmail.com    | 9824046 |  Delhi    |
+| 0000000087 | 8589d9b@gmail.com    | 9817322 |  Kolkatta |
+| 0000000088 | 20618c4@hotmail.com  | 9824509 |  Chennai  |
+| 0000000089 | 87652ba@yahoo.com    |  983126 |  Delhi    |
+| 0000000090 | 10273e1@yahoo.com    |  985199 |  Kolkatta |
+| 0000000091 | 133e15c@hotmail.com  | 9830881 |  Lucknow  |
+| 0000000092 | 7da4feb@hotmail.com  | 9818954 |  Chennai  |
+| 0000000093 | a00f4a0@yahoo.com    | 9818266 |  Mumbai   |
+| 0000000094 | c86052c@yahoo.com    | 9810688 |  Lucknow  |
+| 0000000095 | fa54a21@yahoo.com    | 9819447 |  Lucknow  |
+| 0000000096 | 489cc21@yahoo.com    |  986192 |  Kolkatta |
+| 0000000097 | 3f6f525@hotmail.com  | 9826814 |  Kolkatta |
+| 0000000098 | 2947764@me.com       | 9818308 |  Chennai  |
+| 0000000099 | 01433ed@me.com       | 9814366 |  Chennai  |
+| 0000000100 | 7ac9ff1@hotmail.com  | 9830930 |  Chennai  |
+| 0000000101 | 3695bdd@yahoo.com    | 9826165 |  Kolkatta |
+| 0000000102 | b06e572@yahoo.com    | 9828061 |  Mumbai   |
+| 0000000103 | f1f5881@me.com       | 9814922 |  Delhi    |
+| 0000000104 | da1ccbf@hotmail.com  |  982387 |  Mumbai   |
+| 0000000105 | 5718b2b@me.com       | 9820562 |  Chennai  |
+| 0000000106 | 475db6e@gmail.com    |  988911 |  Delhi    |
+| 0000000107 | a3afeab@hotmail.com  |   98621 |  Mumbai   |
+| 0000000108 | 886384b@hotmail.com  |  981494 |  Kolkatta |
+| 0000000109 | d04237a@hotmail.com  |   98616 |  Mumbai   |
+| 0000000110 | 8cc2414@yahoo.com    |  989372 |  Lucknow  |
+| 0000000111 | 7aaa062@yahoo.com    |  989018 |  Delhi    |
+| 0000000112 | ad48df2@yahoo.com    | 9831039 |  Chennai  |
+| 0000000113 | f9ca0f1@gmail.com    | 9821130 |  Chennai  |
+| 0000000114 | ffbf1b1@gmail.com    |  985961 |  Chennai  |
+| 0000000115 | b53d9cb@me.com       | 9816933 |  Kolkatta |
+| 0000000116 | c82c7aa@gmail.com    | 9827952 |  Lucknow  |
+| 0000000117 | c37934e@hotmail.com  | 9816778 |  Delhi    |
+| 0000000118 | 979063b@gmail.com    | 9813783 |  Kolkatta |
+| 0000000119 | 95dd4f0@gmail.com    | 9818273 |  Mumbai   |
+| 0000000120 | 254868a@yahoo.com    |  986668 |  Kolkatta |
+| 0000000121 | b214d6f@hotmail.com  | 9811005 |  Mumbai   |
+| 0000000122 | 3f29b6e@gmail.com    |   98521 |  Chennai  |
+| 0000000123 | eefd9fa@me.com       |  983551 |  Chennai  |
+| 0000000124 | 0a9bca9@gmail.com    |  985878 |  Delhi    |
+| 0000000125 | 3824078@gmail.com    | 9830004 |  Kolkatta |
+| 0000000126 | 0a09b8c@me.com       | 9829795 |  Lucknow  |
+| 0000000127 | d93e272@hotmail.com  |  984948 |  Delhi    |
+| 0000000128 | a575faa@hotmail.com  |  982513 |  Delhi    |
+| 0000000129 | 07f163e@yahoo.com    | 9816708 |  Chennai  |
+| 0000000130 | 32a1f08@gmail.com    | 9811304 |  Chennai  |
+| 0000000131 | a35d6cf@yahoo.com    | 9810291 |  Lucknow  |
+| 0000000132 | 042460b@yahoo.com    | 9822336 |  Lucknow  |
+| 0000000133 | 2214ad5@yahoo.com    |  986910 |  Chennai  |
+| 0000000134 | 7c34635@yahoo.com    |  988027 |  Mumbai   |
+| 0000000135 | b9e13d7@me.com       |  988110 |  Kolkatta |
+| 0000000136 | f8911a3@yahoo.com    | 9821159 |  Mumbai   |
+| 0000000137 | bb08a3d@gmail.com    | 9810487 |  Delhi    |
+| 0000000138 | 651ab55@me.com       | 9819134 |  Lucknow  |
+| 0000000139 | 5434cad@hotmail.com  | 9832696 |  Delhi    |
+| 0000000140 | 5ab4b8a@me.com       | 9828199 |  Kolkatta |
+| 0000000141 | 333554d@me.com       | 9823680 |  Lucknow  |
+| 0000000142 | f1c2366@me.com       | 9825045 |  Mumbai   |
+| 0000000143 | f3226c9@hotmail.com  | 9812549 |  Lucknow  |
+| 0000000144 | 0f1a82e@yahoo.com    | 9827301 |  Delhi    |
+| 0000000145 | 31b0b18@me.com       |  988621 |  Delhi    |
+| 0000000146 | bd47ac0@yahoo.com    | 9832483 |  Mumbai   |
+| 0000000147 | ede3111@yahoo.com    | 9812040 |  Lucknow  |
+| 0000000148 | 618accd@me.com       |  981987 |  Lucknow  |
+| 0000000149 | 3c5b18e@hotmail.com  |  983921 |  Delhi    |
+| 0000000150 | 2d6bd16@gmail.com    | 9821226 |  Chennai  |
+| 0000000151 | 8144038@me.com       | 9814322 |  Kolkatta |
+| 0000000152 | f2c3a10@hotmail.com  | 9813285 |  Lucknow  |
+| 0000000153 | 0279385@me.com       |  985887 |  Lucknow  |
+| 0000000154 | e42bb89@me.com       | 9821934 |  Delhi    |
+| 0000000155 | e7675fb@me.com       | 9831928 |  Mumbai   |
+| 0000000156 | bb46c91@yahoo.com    | 9815404 |  Mumbai   |
+| 0000000157 | 55d157b@yahoo.com    | 9813578 |  Delhi    |
+| 0000000158 | 3b0db82@gmail.com    | 9830130 |  Delhi    |
+| 0000000159 | 4c1cef1@me.com       | 9820749 |  Kolkatta |
+| 0000000160 | 02b9449@yahoo.com    | 9831869 |  Delhi    |
+| 0000000161 | 2eacbcd@me.com       |  988325 |  Mumbai   |
+| 0000000162 | 9c4567f@gmail.com    | 9818488 |  Mumbai   |
+| 0000000163 | 5e7bf7c@me.com       | 9823395 |  Mumbai   |
+| 0000000164 | 4c40cf0@gmail.com    |  983961 |  Lucknow  |
+| 0000000165 | d9dd248@gmail.com    | 9831555 |  Chennai  |
+| 0000000166 | 18e4b46@gmail.com    | 9814660 |  Kolkatta |
+| 0000000167 | 0156d61@yahoo.com    | 9817645 |  Delhi    |
+| 0000000168 | e128f4b@hotmail.com  | 9832389 |  Lucknow  |
+| 0000000169 | b017266@gmail.com    |   98470 |  Chennai  |
+| 0000000170 | 594f901@gmail.com    | 9815256 |  Chennai  |
+| 0000000171 | e1bb991@yahoo.com    | 9827039 |  Mumbai   |
+| 0000000172 | eae0543@gmail.com    | 9829124 |  Lucknow  |
+| 0000000173 | eef0958@gmail.com    | 9815251 |  Mumbai   |
+| 0000000174 | f7ada19@gmail.com    | 9830905 |  Lucknow  |
+| 0000000175 | 179e3ab@hotmail.com  |  982091 |  Lucknow  |
+| 0000000176 | 636acd2@gmail.com    | 9824599 |  Delhi    |
+| 0000000177 | fc413aa@yahoo.com    | 9810892 |  Chennai  |
+| 0000000178 | 18cfc73@yahoo.com    |   98232 |  Delhi    |
+| 0000000179 | 750c9ef@hotmail.com  | 9829189 |  Mumbai   |
+| 0000000180 | f646b44@yahoo.com    | 9816162 |  Lucknow  |
+| 0000000181 | b26fb06@gmail.com    | 9831635 |  Mumbai   |
+| 0000000182 | 4fff331@hotmail.com  | 9831528 |  Chennai  |
+| 0000000183 | 2be6cbe@yahoo.com    | 9815199 |  Kolkatta |
+| 0000000184 | 9108df0@me.com       | 9813129 |  Lucknow  |
+| 0000000185 | 6a78325@hotmail.com  | 9813884 |  Chennai  |
+| 0000000186 | b99ca56@gmail.com    | 9821822 |  Mumbai   |
+| 0000000187 | 2c0d307@yahoo.com    | 9827436 |  Lucknow  |
+| 0000000188 | ef8788a@gmail.com    | 9816302 |  Kolkatta |
+| 0000000189 | 70b76ca@yahoo.com    | 9827867 |  Kolkatta |
+| 0000000190 | ac39f5c@yahoo.com    | 9829611 |  Mumbai   |
+| 0000000191 | 4b831d6@me.com       | 9811040 |  Mumbai   |
+| 0000000192 | 416c1dd@gmail.com    | 9830260 |  Delhi    |
+| 0000000193 | fb7be5e@gmail.com    | 9827777 |  Kolkatta |
+| 0000000194 | 8109dd7@me.com       | 9825010 |  Delhi    |
+| 0000000195 | b4e3b90@me.com       | 9830637 |  Delhi    |
+| 0000000196 | 40f122c@yahoo.com    | 9810110 |  Chennai  |
+| 0000000197 | 8ba9a00@hotmail.com  | 9827906 |  Kolkatta |
+| 0000000198 | f661b02@hotmail.com  |   98344 |  Mumbai   |
+| 0000000199 | 0aeceac@me.com       | 9820487 |  Mumbai   |
+| 0000000200 | fffc963@hotmail.com  |  984847 |  Delhi    |
++------------+----------------------+---------+-----------+
+200 rows in set (0.00 sec)
