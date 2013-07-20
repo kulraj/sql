@@ -31,26 +31,24 @@ mysql> select id as image_id from images join friends on friend = image_user whe
 
 in single query:
 
-mysql> select name as "users who tagged sahil in all their pictures" from (select count(*) as count,users.id,name,images.id as image_id  from users, images, tags where users.id = image_user and image_id = images.id and tagged = (select id from users where name="sahil") group by users.id) images_of_user, (select count(*) as count, id, image_user from images group by image_user) images_of_allusers where images_of_user.count = images_of_allusers.count and images_of_user.id = images_of_allusers.image_user;
+mysql> select name as "users who tagged sahil in all their pictures" from (select count(*) as count, image_users.id as id, image_users.name, images.id as image_id  from users as image_users, users as tagged_users, images, tags where image_users.id = image_user and image_id = images.id and tagged = tagged_users.id and tagged_users.name="sahil" group by images.image_user) images_of_user, (select count(*) as count, id, image_user from images group by image_user) images_of_allusers where images_of_user.count = images_of_allusers.count and images_of_user.id = images_of_allusers.image_user;
 +----------------------------------------------+
 | users who tagged sahil in all their pictures |
 +----------------------------------------------+
 | pramod                                       |
 | divya                                        |
 +----------------------------------------------+
-2 rows in set (0.00 sec)
-
-
-
+2 rows in set (0.04 sec)
 
 
 
 4) Find friend of a particular user (Say, userA) who have tagged him most no. of times.
 
-mysql> select count(*) as count, users.id as user_id, name as "friend who tagged sahil most number of times" from users, images, tags where users.id = image_user and image_id = images.id and tagged = 4 group by users.id order by count desc limit 1;
-+-------+------------+----------------------------------------------+
-| count | user_id    | friend who tagged sahil most number of times |
-+-------+------------+----------------------------------------------+
-|     2 | 0000000001 | pramod                                       |
-+-------+------------+----------------------------------------------+
-1 row in set (0.00 sec)
+mysql> select count(*) as count, image_user.name as "friend who tagged sahil most number of times" from users as image_user, users as tagged_user, images, tags where image_user.id = image_user and image_id = images.id and tagged = tagged_user.id and tagged_user.name="sahil" group by images.image_user order by count desc limit 1;
++-------+----------------------------------------------+
+| count | friend who tagged sahil most number of times |
++-------+----------------------------------------------+
+|     2 | pramod                                       |
++-------+----------------------------------------------+
+1 row in set (0.09 sec)
+
