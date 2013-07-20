@@ -49,31 +49,18 @@ Q5) Write a query to select article which does not have more than one comment by
 
 1) using group by
 
-mysql> create temporary table user_comments (select article_title as title from users, comments where users.id = comments.user_id group by concat(comments.article_title,comments.user_id) having count(*) > 1);
-Query OK, 2 rows affected (0.10 sec)
-Records: 2  Duplicates: 0  Warnings: 0
-
-mysql> select * from user_comments;
-+----------+
-| title    |
-+----------+
-| article1 |
-| article2 |
-+----------+
-2 rows in set (0.00 sec)
-
-
-mysql> select title from articles where title not in (select * from user_comments);
+mysql> select title from articles where title not in (select article_title from users, comments where users.id = comments.user_id group by concat(comments.article_title,comments.user_id) having count(*) > 1);
 +----------+
 | title    |
 +----------+
 | article4 |
-| article5 |
 | article6 |
-| article7 |
 | article8 |
+| article5 |
+| article7 |
 +----------+
 5 rows in set (0.00 sec)
+
 
 
 2) using left join
