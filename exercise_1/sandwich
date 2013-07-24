@@ -16,6 +16,21 @@ mysql> desc tastes;
 +---------+-------------+------+-----+---------+-------+
 2 rows in set (0.00 sec)
 
+mysql> alter table tastes drop primary key, add unique(name,filling), add id int auto_increment primary key;  
+Query OK, 7 rows affected (0.46 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> desc tastes;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| name    | varchar(20) | NO   | MUL | NULL    |                |
+| filling | varchar(10) | NO   |     | NULL    |                |
+| id      | int(11)     | NO   | PRI | NULL    | auto_increment |
++---------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
 mysql> create table locations (lname varchar(15) not null primary key, phone numeric(7) not null, address varchar(20)); 
 Query OK, 0 rows affected (0.17 sec)
 
@@ -28,6 +43,22 @@ mysql> desc locations;
 | address | varchar(20)  | YES  |     | NULL    |       |
 +---------+--------------+------+-----+---------+-------+
 3 rows in set (0.03 sec)
+
+mysql> alter table locations drop primary key, add unique(lname), add id int auto_increment primary key;  
+Query OK, 4 rows affected (0.32 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> desc locations;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| lname   | varchar(15)  | NO   | UNI | NULL    |                |
+| phone   | decimal(7,0) | NO   |     | NULL    |                |
+| address | varchar(20)  | YES  |     | NULL    |                |
+| id      | int(11)      | NO   | PRI | NULL    | auto_increment |
++---------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
 
 mysql> create table sandwiches (location varchar(15) not null, bread varchar(10) not null, filling varchar(10) not null, price decimal(3,2) not null, primary key(location, bread, filling)); 
 Query OK, 0 rows affected (0.14 sec)
@@ -43,6 +74,21 @@ mysql> desc sandwiches;
 +----------+--------------+------+-----+---------+-------+
 4 rows in set (0.00 sec)
 
+mysql> alter table sandwiches drop primary key, add unique(location, bread, filling), add id int auto_increment primary key;  
+Query OK, 10 rows affected (0.40 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc sandwiches;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| location | varchar(15)  | NO   | MUL | NULL    |                |
+| bread    | varchar(10)  | NO   |     | NULL    |                |
+| filling  | varchar(10)  | NO   |     | NULL    |                |
+| price    | decimal(3,2) | NO   |     | NULL    |                |
+| id       | int(11)      | NO   | PRI | NULL    | auto_increment |
++----------+--------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
 
 
 mysql> insert into tastes values ("brown", "turkey"),
@@ -56,18 +102,19 @@ Query OK, 7 rows affected (0.07 sec)
 Records: 7  Duplicates: 0  Warnings: 0
 
 mysql> select * from tastes;
-+-------+---------+
-| name  | filling |
-+-------+---------+
-| brown | beef    |
-| brown | ham     |
-| brown | turkey  |
-| green | beef    |
-| green | cheese  |
-| green | turkey  |
-| jones | cheese  |
-+-------+---------+
++-------+---------+----+
+| name  | filling | id |
++-------+---------+----+
+| brown | beef    |  1 |
+| brown | ham     |  2 |
+| brown | turkey  |  3 |
+| green | beef    |  4 |
+| green | cheese  |  5 |
+| green | turkey  |  6 |
+| jones | cheese  |  7 |
++-------+---------+----+
 7 rows in set (0.00 sec)
+
 
 mysql> insert into locations values("lincoln", 6834523, "lincoln palace"),
     ->                             ("o'niell's", 6742134, "pearse st"),
@@ -77,15 +124,16 @@ Query OK, 4 rows affected (0.09 sec)
 Records: 4  Duplicates: 0  Warnings: 0
 
 mysql> select * from locations;
-+-----------+---------+----------------+
-| lname     | phone   | address        |
-+-----------+---------+----------------+
-| buttery   | 7023421 | college st     |
-| lincoln   | 6834523 | lincoln palace |
-| o'niell's | 6742134 | pearse st      |
-| old nag   | 7678132 | dame st        |
-+-----------+---------+----------------+
++-----------+---------+----------------+----+
+| lname     | phone   | address        | id |
++-----------+---------+----------------+----+
+| buttery   | 7023421 | college st     |  1 |
+| lincoln   | 6834523 | lincoln palace |  2 |
+| o'niell's | 6742134 | pearse st      |  3 |
+| old nag   | 7678132 | dame st        |  4 |
++-----------+---------+----------------+----+
 4 rows in set (0.00 sec)
+
 
 mysql> insert into sandwiches values ("lincoln", "rye", "ham", 1.25);
 Query OK, 1 row affected (0.10 sec)
@@ -118,21 +166,22 @@ mysql> insert into sandwiches values ("old nag", "rye", "ham", 1.40);
 Query OK, 1 row affected (0.06 sec)
 
 mysql> select * from sandwiches;
-+-----------+-------+---------+-------+
-| location  | bread | filling | price |
-+-----------+-------+---------+-------+
-| buttery   | white | cheese  |  1.00 |
-| buttery   | white | ham     |  1.10 |
-| lincoln   | rye   | beef    |  1.35 |
-| lincoln   | rye   | ham     |  1.25 |
-| lincoln   | white | ham     |  1.30 |
-| o'niell's | white | cheese  |  1.20 |
-| o'niell's | white | turkey  |  1.35 |
-| o'niell's | whole | ham     |  1.25 |
-| old nag   | rye   | beef    |  1.35 |
-| old nag   | rye   | ham     |  1.40 |
-+-----------+-------+---------+-------+
++-----------+-------+---------+-------+----+
+| location  | bread | filling | price | id |
++-----------+-------+---------+-------+----+
+| buttery   | white | cheese  |  1.00 |  1 |
+| buttery   | white | ham     |  1.10 |  2 |
+| lincoln   | rye   | beef    |  1.35 |  3 |
+| lincoln   | rye   | ham     |  1.25 |  4 |
+| lincoln   | white | ham     |  1.30 |  5 |
+| o'niell's | white | cheese  |  1.20 |  6 |
+| o'niell's | white | turkey  |  1.35 |  7 |
+| o'niell's | whole | ham     |  1.25 |  8 |
+| old nag   | rye   | beef    |  1.35 |  9 |
+| old nag   | rye   | ham     |  1.40 | 10 |
++-----------+-------+---------+-------+----+
 10 rows in set (0.00 sec)
+
 
 
 

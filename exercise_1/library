@@ -16,6 +16,32 @@ mysql> desc branch;
 +-----------+-------------+------+-----+---------+-------+
 3 rows in set (0.00 sec)
 
+mysql> alter table branch drop primary key;
+Query OK, 3 rows affected (0.31 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> alter table branch add unique key (Bcode);
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table branch add id int auto_increment primary key;
+Query OK, 3 rows affected (0.35 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc branch;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| Bcode     | varchar(3)  | NO   | UNI | NULL    |                |
+| librarian | varchar(20) | NO   |     | NULL    |                |
+| address   | varchar(20) | NO   |     | NULL    |                |
+| id        | int(11)     | NO   | PRI | NULL    | auto_increment |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+
+
 mysql> create table titles (title varchar(25) not null primary key, author varchar(20) not null, publisher varchar(20) not null);
 Query OK, 0 rows affected (0.17 sec)
 
@@ -28,6 +54,24 @@ mysql> desc titles;
 | publisher | varchar(20) | NO   |     | NULL    |       |
 +-----------+-------------+------+-----+---------+-------+
 3 rows in set (0.02 sec)
+
+mysql> alter table titles drop primary key, add unique key(title), add id int auto_increment primary key;
+Query OK, 5 rows affected (0.30 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> desc titles;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| title     | varchar(25) | NO   | UNI | NULL    |                |
+| author    | varchar(20) | NO   |     | NULL    |                |
+| publisher | varchar(20) | NO   |     | NULL    |                |
+| id        | int(11)     | NO   | PRI | NULL    | auto_increment |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+
 
 mysql>  create table holdings(branch varchar(3), Title varchar(25), `#copies` tinyint unsigned not null default 1, primary key(branch, Title));
 Query OK, 0 rows affected (0.12 sec)
@@ -42,6 +86,22 @@ mysql> desc holdings;
 +---------+---------------------+------+-----+---------+-------+
 3 rows in set (0.01 sec)
 
+mysql> alter table holdings drop primary key, add unique key(branch, Title), add id int auto_increment primary key;
+Query OK, 10 rows affected (0.37 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc holdings;
++---------+---------------------+------+-----+---------+----------------+
+| Field   | Type                | Null | Key | Default | Extra          |
++---------+---------------------+------+-----+---------+----------------+
+| branch  | varchar(3)          | NO   | MUL |         |                |
+| Title   | varchar(25)         | NO   |     |         |                |
+| #copies | tinyint(3) unsigned | NO   |     | 1       |                |
+| id      | int(11)             | NO   | PRI | NULL    | auto_increment |
++---------+---------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+
 mysql> insert into branch values ("B1", "John Smith", "2 Anglesea rd"),
     ->                           ("B2", "Mary Jones", "34 pearse st"),
     ->                           ("B3", "Francis Owens", "Grange X");
@@ -49,14 +109,15 @@ Query OK, 3 rows affected (0.11 sec)
 Records: 3  Duplicates: 0  Warnings: 0
 
 mysql> select * from branch;
-+-------+---------------+---------------+
-| Bcode | librarian     | address       |
-+-------+---------------+---------------+
-| B1    | John Smith    | 2 Anglesea rd |
-| B2    | Mary Jones    | 34 pearse st  |
-| B3    | Francis Owens | Grange X      |
-+-------+---------------+---------------+
++-------+---------------+---------------+----+
+| Bcode | librarian     | address       | id |
++-------+---------------+---------------+----+
+| B1    | John Smith    | 2 Anglesea rd |  1 |
+| B2    | Mary Jones    | 34 pearse st  |  2 |
+| B3    | Francis Owens | Grange X      |  3 |
++-------+---------------+---------------+----+
 3 rows in set (0.00 sec)
+
 
 mysql> insert into titles values ("Susannah", "ann brown", "macmillan"),
     ->                           ("how to fish", "amy fly", "stop press"),
@@ -67,16 +128,17 @@ Query OK, 5 rows affected (0.12 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
 mysql> select * from titles;
-+---------------------+---------------+------------+
-| title               | author        | publisher  |
-+---------------------+---------------+------------+
-| a history of dublin | david little  | wiley      |
-| computers           | blaise pascal | applewoods |
-| how to fish         | amy fly       | stop press |
-| Susannah            | ann brown     | macmillan  |
-| the wife            | ann brown     | macmillan  |
-+---------------------+---------------+------------+
++---------------------+---------------+------------+----+
+| title               | author        | publisher  | id |
++---------------------+---------------+------------+----+
+| a history of dublin | david little  | wiley      |  1 |
+| computers           | blaise pascal | applewoods |  2 |
+| how to fish         | amy fly       | stop press |  3 |
+| Susannah            | ann brown     | macmillan  |  4 |
+| the wife            | ann brown     | macmillan  |  5 |
++---------------------+---------------+------------+----+
 5 rows in set (0.00 sec)
+
 
 mysql> insert into holdings values("B1", "susannah", 3);
 Query OK, 1 row affected (0.08 sec)
@@ -109,21 +171,22 @@ mysql> insert into holdings values("B3", "the wife", 1);
 Query OK, 1 row affected (0.05 sec)
 
 mysql> select * from holdings;
-+--------+---------------------+---------+
-| branch | Title               | #copies |
-+--------+---------------------+---------+
-| B1     | a history of dublin |       1 |
-| B1     | how to fish         |       2 |
-| B1     | susannah            |       3 |
-| B2     | computers           |       2 |
-| B2     | how to fish         |       4 |
-| B2     | the wife            |       3 |
-| B3     | a history of dublin |       1 |
-| B3     | computers           |       4 |
-| B3     | susannah            |       3 |
-| B3     | the wife            |       1 |
-+--------+---------------------+---------+
++--------+---------------------+---------+----+
+| branch | Title               | #copies | id |
++--------+---------------------+---------+----+
+| B1     | a history of dublin |       1 |  1 |
+| B1     | how to fish         |       2 |  2 |
+| B1     | susannah            |       3 |  3 |
+| B2     | computers           |       2 |  4 |
+| B2     | how to fish         |       4 |  5 |
+| B2     | the wife            |       3 |  6 |
+| B3     | a history of dublin |       1 |  7 |
+| B3     | computers           |       4 |  8 |
+| B3     | susannah            |       3 |  9 |
+| B3     | the wife            |       1 | 10 |
++--------+---------------------+---------+----+
 10 rows in set (0.00 sec)
+
 
 
 
