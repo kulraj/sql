@@ -30,13 +30,15 @@ mysql> select count(*) as "number of people", city as "from" from email_subscrib
 
 Q3) Which city were the maximum respondents from?
 
-mysql> select count(*) as count, city as "maximum respondents from" from email_subscribers group by city order by count desc limit 1;
-+-------+--------------------------+
-| count | maximum respondents from |
-+-------+--------------------------+
-|    42 |  Chennai                 |
-+-------+--------------------------+
+mysql> select respondents_per_city.city as "maximum respondents from" from (select count(*) as count, city from email_subscribers group by city) as respondents_per_city, ( select count(*) as count, city from email_subscribers group by city order by count desc limit 1) as max_respondents_from where max_respondents_from.count = respondents_per_city.count;
++--------------------------+
+| maximum respondents from |
++--------------------------+
+|  Chennai                 |
++--------------------------+
 1 row in set (0.00 sec)
+
+
 
 
 Q4) What all email domains did people respond from ?
@@ -55,28 +57,12 @@ mysql> select distinct mid(email, locate('@',email) + 1, locate('.', email) - lo
 
 Q5) Which is the most popular email domain among the respondents ?
 
-mysql> create temporary table domains select mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers;
-Query OK, 200 rows affected (0.18 sec)
-Records: 200  Duplicates: 0  Warnings: 0
-
-mysql> select count(*) as count, domain as "most popular domain" from domains group by domain order by count desc limit 1;
-+-------+---------------------+
-| count | most popular domain |
-+-------+---------------------+
-|    51 | yahoo               |
-+-------+---------------------+
-1 row in set (0.01 sec)
-
-______________________________________________________________________________________________________________________
-
-in single statement:
-
-mysql> select count(*) as count, domain as "most popular domain" from (select mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers) as domains group by domain order by count desc limit 1;
-+-------+---------------------+
-| count | most popular domain |
-+-------+---------------------+
-|    51 | yahoo               |
-+-------+---------------------+
-1 row in set (0.00 sec)
-
+mysql> select users_per_domain.domain as "most popular domain(s)" from (select count(*) as count, domain from (select mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers) as domains group by domain) as users_per_domain, (select count(*) as count, domain from (select mid(email, locate('@',email) + 1, locate('.', email) - locate('@', email) - 1) as domain from email_subscribers) as domains group by domain order by count desc limit 1) as max_users_domain where users_per_domain.count = max_users_domain.count;
++------------------------+
+| most popular domain(s) |
++------------------------+
+| me                     |
+| yahoo                  |
++------------------------+
+2 rows in set (0.00 sec)
 
