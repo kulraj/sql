@@ -36,13 +36,15 @@ mysql> select articles.title as "articles without comments" from articles left j
 
 Q4) Write a query to select article which has maximum comments
 
-mysql> select max(comments_per_article.count) as comments, comments_per_article.title as "article with maximum comments" from( select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title) as comments_per_article;
-+----------+-------------------------------+
-| comments | article with maximum comments |
-+----------+-------------------------------+
-|        4 | article1                      |
-+----------+-------------------------------+
+mysql> select comments_per_article.title as "article(s) with maximum comments" from (select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title) as comments_per_article, (select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title order by count desc limit 1) as max_comments where max_comments.count = comments_per_article.count;
++----------------------------------+
+| article(s) with maximum comments |
++----------------------------------+
+| article1                         |
++----------------------------------+
 1 row in set (0.00 sec)
+
+
 
 
 
