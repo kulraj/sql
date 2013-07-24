@@ -45,3 +45,19 @@ mysql> select * from articles;
 +----------+-------------+---------+-----------------+
 7 rows in set (0.00 sec)
 
+
+mysql> select * from articles;
++----------+-------------+---------+-----------------+----+
+| title    | category_id | user_id | text            | id |
++----------+-------------+---------+-----------------+----+
+| article1 |           1 |   00006 | lorem ipsum     |  1 |
+| article2 |           2 |   00007 | new text        |  2 |
+| article4 |           2 |   00006 | lorem ipsum dol |  3 |
+| article5 |           4 |   00010 | lorem dol       |  4 |
+| article6 |           1 |   00008 | lorem ips       |  5 |
+| article7 |           5 |   00011 | nice            |  6 |
+| article8 |           6 |   00009 | what            |  7 |
++----------+-------------+---------+-----------------+----+
+7 rows in set (0.00 sec)
+
+

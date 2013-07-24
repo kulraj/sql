@@ -36,13 +36,14 @@ mysql> select articles.title as "articles without comments" from articles left j
 
 Q4) Write a query to select article which has maximum comments
 
-mysql> select articles.title as "article with maximum comments" from articles, comments where articles.title = comments.article_title group by articles.title order by count(*) desc limit 1;
-+-------------------------------+
-| article with maximum comments |
-+-------------------------------+
-| article1                      |
-+-------------------------------+
+mysql> select max(comments_per_article.count) as comments, comments_per_article.title as "article with maximum comments" from( select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title) as comments_per_article;
++----------+-------------------------------+
+| comments | article with maximum comments |
++----------+-------------------------------+
+|        4 | article1                      |
++----------+-------------------------------+
 1 row in set (0.00 sec)
+
 
 
 Q5) Write a query to select article which does not have more than one comment by the same user ( do this using left join and also do it using group by )

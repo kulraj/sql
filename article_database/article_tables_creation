@@ -4,6 +4,23 @@ Query OK, 1 row affected (0.00 sec)
 mysql> use article;
 Database changed
 
+mysql> CREATE TABLE `users` (
+  `name` varchar(20) DEFAULT NULL,
+  `id` smallint(5) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `type` enum('admin','normal') DEFAULT 'normal',
+  PRIMARY KEY (`id`));
+
+mysql> desc users;
++-------+-------------------------------+------+-----+---------+----------------+
+| Field | Type                          | Null | Key | Default | Extra          |
++-------+-------------------------------+------+-----+---------+----------------+
+| name  | varchar(20)                   | YES  |     | NULL    |                |
+| id    | smallint(5) unsigned zerofill | NO   | PRI | NULL    | auto_increment |
+| type  | enum('admin','normal')        | YES  |     | normal  |                |
++-------+-------------------------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+
 mysql> create table articles (title varchar(50) not null primary key, category_id tinyint unsigned not null, user_id smallint zerofill unsigned not null, `text` text);
 Query OK, 0 rows affected (0.15 sec)
 
@@ -18,6 +35,21 @@ mysql> desc articles;
 +-------------+-------------------------------+------+-----+---------+-------+
 4 rows in set (0.00 sec)
 
+mysql> alter table articles drop primary key, add unique (title), add id int auto_increment primary key;
+Query OK, 7 rows affected (0.32 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> desc articles;
++-------------+-------------------------------+------+-----+---------+----------------+
+| Field       | Type                          | Null | Key | Default | Extra          |
++-------------+-------------------------------+------+-----+---------+----------------+
+| title       | varchar(50)                   | NO   | UNI | NULL    |                |
+| category_id | tinyint(3) unsigned           | NO   |     | NULL    |                |
+| user_id     | smallint(5) unsigned zerofill | NO   | MUL | NULL    |                |
+| text        | text                          | YES  |     | NULL    |                |
+| id          | int(11)                       | NO   | PRI | NULL    | auto_increment |
++-------------+-------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
 
 
 mysql> create table comments (article_title varchar(30) not null, user_id smallint zerofill unsigned not null, id int zerofill unsigned auto_increment, `text` varchar(100), primary key(id));
