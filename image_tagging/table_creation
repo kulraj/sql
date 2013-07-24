@@ -29,6 +29,20 @@ mysql> desc friends;
 +---------+---------------------------+------+-----+------------+-------+
 2 rows in set (0.00 sec)
 
+mysql> alter table friends drop primary key, add unique (user_id, friend), add id int auto_increment primary key;
+Query OK, 50 rows affected (0.43 sec)
+Records: 50  Duplicates: 0  Warnings: 0
+
+mysql> desc friends;
++---------+---------------------------+------+-----+------------+----------------+
+| Field   | Type                      | Null | Key | Default    | Extra          |
++---------+---------------------------+------+-----+------------+----------------+
+| user_id | int(10) unsigned zerofill | NO   | MUL | 0000000000 |                |
+| friend  | int(10) unsigned zerofill | NO   | MUL | 0000000000 |                |
+| id      | int(11)                   | NO   | PRI | NULL       | auto_increment |
++---------+---------------------------+------+-----+------------+----------------+
+3 rows in set (0.00 sec)
+
 
 mysql> create table images(id int zerofill auto_increment primary key, image_user int unsigned zerofill references users.id);
 Query OK, 0 rows affected (0.14 sec)
@@ -54,4 +68,19 @@ mysql> desc tags;
 | tagged   | int(10) unsigned zerofill | YES  |     | NULL    |       |
 +----------+---------------------------+------+-----+---------+-------+
 2 rows in set (0.01 sec)
+
+mysql> alter table tags add id int auto_increment primary key;
+Query OK, 57 rows affected (0.45 sec)
+Records: 57  Duplicates: 0  Warnings: 0
+
+mysql> desc tags;
++----------+---------------------------+------+-----+---------+----------------+
+| Field    | Type                      | Null | Key | Default | Extra          |
++----------+---------------------------+------+-----+---------+----------------+
+| image_id | int(10) unsigned zerofill | YES  |     | NULL    |                |
+| tagged   | int(10) unsigned zerofill | YES  |     | NULL    |                |
+| id       | int(11)                   | NO   | PRI | NULL    | auto_increment |
++----------+---------------------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
 
