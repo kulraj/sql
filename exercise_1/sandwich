@@ -188,7 +188,7 @@ mysql> select * from sandwiches;
 
 Q1) places where Jones can eat (using nested subquery)
 
-mysql> select distinct location from sandwiches, tastes where tastes.filling = sandwiches.filling and tastes.filling in (select filling from sandwiches where name = "jones");
+mysql> select location from sandwiches where filling in (select filling from tastes where name = "jones");
 +-----------+
 | location  |
 +-----------+

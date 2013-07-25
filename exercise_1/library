@@ -207,7 +207,7 @@ mysql> select title as books_by_macmillan from titles where publisher = "macmill
 
 Q2) branches that hold any books by brown (using nested subquery)
 
-mysql> select distinct holdings.branch from titles, holdings where titles.title = holdings.title and titles.title in (select title from titles where author = "ann brown");
+mysql> select distinct branch from holdings where title in (select title from titles where author = "ann brown");
 +--------+
 | branch |
 +--------+
@@ -215,7 +215,7 @@ mysql> select distinct holdings.branch from titles, holdings where titles.title 
 | B2     |
 | B3     |
 +--------+
-3 rows in set (0.01 sec)
+3 rows in set (0.02 sec)
 
 
 
