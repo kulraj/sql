@@ -11,9 +11,9 @@ mysql> select articles.title from articles, users where articles.user_id = users
 
 Q2) For all the articles being selected above, select all the articles and also the comments associated with those articles in a single query
 
-mysql> select articles.title as article_by_user3,comments.text as comment from articles, users, comments where articles.user_id = users.id and comments.article_title = articles.title and users.name = "user3";
+mysql> select articles.title as article_by_user3, comments.statement from articles, users, comments where articles.user_id = users.id and comments.article_id = articles.id and users.name = "user3";
 +------------------+-------------------+
-| article_by_user3 | comment           |
+| article_by_user3 | statement         |
 +------------------+-------------------+
 | article6         | this is good      |
 | article6         | this is very good |
@@ -21,9 +21,10 @@ mysql> select articles.title as article_by_user3,comments.text as comment from a
 2 rows in set (0.00 sec)
 
 
+
 Q3) Write a query to select all articles which do not have any comments
 
-mysql> select articles.title as "articles without comments" from articles left join comments on articles.title = comments.article_title where comments.id is null;
+mysql> select articles.title as "articles without comments" from articles left join comments on articles.id = comments.article_id where comments.id is null;
 +---------------------------+
 | articles without comments |
 +---------------------------+
@@ -34,9 +35,10 @@ mysql> select articles.title as "articles without comments" from articles left j
 3 rows in set (0.00 sec)
 
 
+
 Q4) Write a query to select article which has maximum comments
 
-mysql> select comments_per_article.title as "article(s) with maximum comments" from (select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title) as comments_per_article, (select count(*) as count,articles.title as title from articles, comments where articles.title = comments.article_title group by articles.title order by count desc limit 1) as max_comments where max_comments.count = comments_per_article.count;
+mysql> select comments_per_article.title as "article(s) with maximum comments" from (select count(*) as count,articles.title as title from articles, comments where articles.id = comments.article_id group by articles.title) as comments_per_article, (select count(*) as count,articles.title as title from articles, comments where articles.id = comments.article_id group by articles.title order by count desc limit 1) as max_comments where max_comments.count = comments_per_article.count;
 +----------------------------------+
 | article(s) with maximum comments |
 +----------------------------------+
@@ -52,15 +54,15 @@ Q5) Write a query to select article which does not have more than one comment by
 
 1) using group by
 
-mysql> select title from articles where title not in (select article_title from users, comments where users.id = comments.user_id group by concat(comments.article_title,comments.user_id) having count(*) > 1);
+mysql> select title from articles where articles.id not in (select comments.article_id from users, comments where users.id = comments.user_id group by concat(comments.article_id, comments.user_id) having count(*) > 1);
 +----------+
 | title    |
 +----------+
 | article4 |
-| article6 |
-| article8 |
 | article5 |
+| article6 |
 | article7 |
+| article8 |
 +----------+
 5 rows in set (0.00 sec)
 
@@ -68,7 +70,7 @@ mysql> select title from articles where title not in (select article_title from 
 
 2) using left join
 
-mysql> create temporary table article_comments (select title, comments.user_id from articles left join comments on articles.title = comments.article_title);
+mysql> create temporary table article_comments (select title, comments.user_id from articles left join comments on articles.id = comments.article_id);
 Query OK, 12 rows affected (0.14 sec)
 Records: 12  Duplicates: 0  Warnings: 0
 
@@ -94,32 +96,33 @@ mysql> select * from article_comments;
 
 
 
-mysql> create table user_comments (select name, article_title from users left join comments on users.id = comments.user_id);
+mysql> create table user_comments (select name, article_id from users left join comments on users.id = comments.user_id);
 Query OK, 14 rows affected (0.14 sec)
 Records: 14  Duplicates: 0  Warnings: 0
 
 mysql> select * from user_comments;
-+-------+---------------+
-| name  | article_title |
-+-------+---------------+
-| user1 | article1      |
-| user2 | article6      |
-| user3 | article1      |
-| user3 | article4      |
-| user3 | article1      |
-| user4 | NULL          |
-| user5 | article2      |
-| user5 | article2      |
-| user5 | article1      |
-| user5 | article6      |
-| john  | article3      |
-| jones | NULL          |
-| bruce | NULL          |
-| clark | NULL          |
-+-------+---------------+
++-------+------------+
+| name  | article_id |
++-------+------------+
+| user1 |          1 |
+| user2 |          5 |
+| user3 |          1 |
+| user3 |          3 |
+| user3 |          1 |
+| user4 |       NULL |
+| user5 |          2 |
+| user5 |          2 |
+| user5 |          1 |
+| user5 |          5 |
+| john  |       NULL |
+| jones |       NULL |
+| bruce |       NULL |
+| clark |       NULL |
++-------+------------+
 14 rows in set (0.00 sec)
 
-mysql> create table user_article_comments (select title, user_comments.name from articles left join user_comments on articles.title = user_comments.article_title);
+
+mysql> create table user_article_comments (select title, user_comments.name from articles left join user_comments on articles.id = user_comments.article_id);
 Query OK, 12 rows affected (0.10 sec)
 Records: 12  Duplicates: 0  Warnings: 0
 

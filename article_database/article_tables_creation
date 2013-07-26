@@ -91,6 +91,10 @@ mysql> alter table comments change `text` statement varchar(200);
 Query OK, 10 rows affected (0.37 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
+mysql> alter table comments add foreign key (article_id) references articles(id); 
+Query OK, 9 rows affected (0.42 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
 mysql> desc comments;
 +------------+-------------------------------+------+-----+---------+----------------+
 | Field      | Type                          | Null | Key | Default | Extra          |
@@ -98,9 +102,10 @@ mysql> desc comments;
 | user_id    | smallint(5) unsigned zerofill | NO   | MUL | NULL    |                |
 | id         | int(10) unsigned zerofill     | NO   | PRI | NULL    | auto_increment |
 | statement  | varchar(200)                  | YES  |     | NULL    |                |
-| article_id | int(11)                       | YES  |     | NULL    |                |
+| article_id | int(11)                       | YES  | MUL | NULL    |                |
 +------------+-------------------------------+------+-----+---------+----------------+
 4 rows in set (0.00 sec)
+
 
 
 mysql> create table categories (id tinyint auto_increment primary key, name varchar(20) not null, check (name <> ""));
