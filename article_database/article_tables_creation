@@ -51,6 +51,24 @@ mysql> desc articles;
 +-------------+-------------------------------+------+-----+---------+----------------+
 5 rows in set (0.00 sec)
 
+Database changed
+mysql> alter table articles change `text` body text;
+Query OK, 7 rows affected (0.31 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> desc articles;
++-------------+-------------------------------+------+-----+---------+----------------+
+| Field       | Type                          | Null | Key | Default | Extra          |
++-------------+-------------------------------+------+-----+---------+----------------+
+| title       | varchar(50)                   | NO   | UNI | NULL    |                |
+| category_id | tinyint(3) unsigned           | NO   |     | NULL    |                |
+| user_id     | smallint(5) unsigned zerofill | NO   | MUL | NULL    |                |
+| body        | text                          | YES  |     | NULL    |                |
+| id          | int(11)                       | NO   | PRI | NULL    | auto_increment |
++-------------+-------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+
 
 mysql> create table comments (article_title varchar(30) not null, user_id smallint zerofill unsigned not null, id int zerofill unsigned auto_increment, `text` varchar(100), primary key(id));
 Query OK, 0 rows affected (0.13 sec)
@@ -66,6 +84,23 @@ mysql> desc comments;
 +---------------+-------------------------------+------+-----+---------+----------------+
 4 rows in set (0.01 sec)
 
+mysql> alter table comments drop article_title, add article_id int references articles.id; Query OK, 10 rows affected (0.27 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> alter table comments change `text` statement varchar(200);
+Query OK, 10 rows affected (0.37 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc comments;
++------------+-------------------------------+------+-----+---------+----------------+
+| Field      | Type                          | Null | Key | Default | Extra          |
++------------+-------------------------------+------+-----+---------+----------------+
+| user_id    | smallint(5) unsigned zerofill | NO   | MUL | NULL    |                |
+| id         | int(10) unsigned zerofill     | NO   | PRI | NULL    | auto_increment |
+| statement  | varchar(200)                  | YES  |     | NULL    |                |
+| article_id | int(11)                       | YES  |     | NULL    |                |
++------------+-------------------------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
 
 
 mysql> create table categories (id tinyint auto_increment primary key, name varchar(20) not null, check (name <> ""));
